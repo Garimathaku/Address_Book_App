@@ -1,72 +1,49 @@
 package com.uc.address_book_app.service;
 
-import com.uc.address_book_app.dto.AddressDTO;
-import com.uc.address_book_app.model.Address;
-import com.uc.address_book_app.repository.AddressRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.uc.address_book_app.dto.AddressDTO;
+import org.springframework.stereotype.Service;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
 public class AddressService {
 
-    @Autowired
-    private AddressRepository repository; // Inject Repository
-
-    // Convert Model to DTO
-    private AddressDTO convertToDTO(Address address) {
-        return new AddressDTO(address.getId(), address.getName(), address.getCity(), address.getState());
-    }
-
-    // Convert DTO to Model
-    private Address convertToModel(AddressDTO dto) {
-        Address address = new Address();
-        address.setId(dto.getId());
-        address.setName(dto.getName());
-        address.setCity(dto.getCity());
-        address.setState(dto.getState());
-        return address;
-    }
+    private final Map<Long, AddressDTO> addressBook = new ConcurrentHashMap<>();
+    private final AtomicLong idCounter = new AtomicLong(1);
 
     // Get All Addresses
     public List<AddressDTO> getAllAddresses() {
-        return repository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+        return new ArrayList<>(addressBook.values());
     }
 
     // Get Address By ID
     public Optional<AddressDTO> getAddressById(Long id) {
-        return repository.findById(id).map(this::convertToDTO);
+        return Optional.ofNullable(addressBook.get(id));
     }
 
     // Save New Address
     public AddressDTO saveAddress(AddressDTO dto) {
-        Address savedAddress = repository.save(convertToModel(dto));
-        return convertToDTO(savedAddress);
+        long id = idCounter.getAndIncrement();
+        dto.setId(id);
+        addressBook.put(id, dto);
+        return dto;
     }
 
     // Update Address
     public AddressDTO updateAddress(Long id, AddressDTO updatedData) {
-        Optional<Address> optionalAddress = repository.findById(id);
-        if (optionalAddress.isPresent()) {
-            Address existingAddress = optionalAddress.get();
-            existingAddress.setName(updatedData.getName());
-            existingAddress.setCity(updatedData.getCity());
-            existingAddress.setState(updatedData.getState());
-            Address updatedAddress = repository.save(existingAddress);
-            return convertToDTO(updatedAddress);
+        if (addressBook.containsKey(id)) {
+            updatedData.setId(id);
+            addressBook.put(id, updatedData);
+            return updatedData;
         }
         return null;
     }
 
     // Delete Address
     public boolean deleteAddress(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+        return addressBook.remove(id) != null;
     }
 }

@@ -1,13 +1,13 @@
 package com.uc.address_book_app.dto;
 
 
+
 public class AddressDTO {
     private Long id;
     private String name;
     private String city;
     private String state;
 
-    // Constructors
     public AddressDTO() {}
 
     public AddressDTO(Long id, String name, String city, String state) {
@@ -30,3 +30,4 @@ public class AddressDTO {
     public String getState() { return state; }
     public void setState(String state) { this.state = state; }
 }
+

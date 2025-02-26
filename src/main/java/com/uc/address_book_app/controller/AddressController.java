@@ -2,6 +2,7 @@ package com.uc.address_book_app.controller;
 
 
 
+
 import com.uc.address_book_app.dto.AddressDTO;
 import com.uc.address_book_app.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class AddressController {
 
     @Autowired
-    private AddressService service; // Inject Service
+    private AddressService service;
 
     @GetMapping
     public ResponseEntity<List<AddressDTO>> getAll() {
