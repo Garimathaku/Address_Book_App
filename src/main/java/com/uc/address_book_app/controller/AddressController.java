@@ -3,7 +3,8 @@ package com.uc.address_book_app.controller;
 
 
 
-import com.uc.address_book_app.model.Address;
+
+import com.uc.address_book_app.dto.AddressDTO;
 import com.uc.address_book_app.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,24 +22,24 @@ public class AddressController {
     private AddressService service;
 
     @GetMapping
-    public ResponseEntity<List<Address>> getAll() {
+    public ResponseEntity<List<AddressDTO>> getAll() {
         return ResponseEntity.ok(service.getAllAddresses());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Address> getById(@PathVariable Long id) {
-        Optional<Address> address = service.getAddressById(id);
+    public ResponseEntity<AddressDTO> getById(@PathVariable Long id) {
+        Optional<AddressDTO> address = service.getAddressById(id);
         return address.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Address> save(@RequestBody Address address) {
-        return ResponseEntity.ok(service.saveAddress(address));
+    public ResponseEntity<AddressDTO> save(@RequestBody AddressDTO addressDTO) {
+        return ResponseEntity.ok(service.saveAddress(addressDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Address> update(@PathVariable Long id, @RequestBody Address updatedData) {
-        Address updatedAddress = service.updateAddress(id, updatedData);
+    public ResponseEntity<AddressDTO> update(@PathVariable Long id, @RequestBody AddressDTO updatedData) {
+        AddressDTO updatedAddress = service.updateAddress(id, updatedData);
         return updatedAddress != null ? ResponseEntity.ok(updatedAddress) : ResponseEntity.notFound().build();
     }
 
