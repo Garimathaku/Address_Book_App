@@ -1,9 +1,5 @@
 package com.uc.address_book_app.service;
 
-
-
-
-
 import com.uc.address_book_app.dto.AddressDTO;
 import com.uc.address_book_app.model.Address;
 import com.uc.address_book_app.repository.AddressRepository;
@@ -18,7 +14,7 @@ import java.util.stream.Collectors;
 public class AddressService {
 
     @Autowired
-    private AddressRepository repository;
+    private AddressRepository repository; // Inject Repository
 
     // Convert Model to DTO
     private AddressDTO convertToDTO(Address address) {
@@ -35,17 +31,17 @@ public class AddressService {
         return address;
     }
 
-    // Get All Addresses as DTO
+    // Get All Addresses
     public List<AddressDTO> getAllAddresses() {
         return repository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // Get Address By ID as DTO
+    // Get Address By ID
     public Optional<AddressDTO> getAddressById(Long id) {
         return repository.findById(id).map(this::convertToDTO);
     }
 
-    // Save Address
+    // Save New Address
     public AddressDTO saveAddress(AddressDTO dto) {
         Address savedAddress = repository.save(convertToModel(dto));
         return convertToDTO(savedAddress);

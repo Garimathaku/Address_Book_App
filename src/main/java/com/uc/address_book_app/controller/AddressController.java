@@ -2,8 +2,6 @@ package com.uc.address_book_app.controller;
 
 
 
-
-
 import com.uc.address_book_app.dto.AddressDTO;
 import com.uc.address_book_app.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,7 @@ import java.util.Optional;
 public class AddressController {
 
     @Autowired
-    private AddressService service;
+    private AddressService service; // Inject Service
 
     @GetMapping
     public ResponseEntity<List<AddressDTO>> getAll() {
@@ -48,4 +46,3 @@ public class AddressController {
         return service.deleteAddress(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }
-
