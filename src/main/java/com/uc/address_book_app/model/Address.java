@@ -9,7 +9,7 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "addresses")
+@Table(name = "address1")
 public class Address {
 
     @Id
